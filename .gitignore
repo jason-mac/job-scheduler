@@ -7,8 +7,9 @@ CMakeFiles/
 cmake_install.cmake
 compile_commands.json
 
-# rust
-target/
+# go
+api/api
+api/api.exe
 
 # compiled objects / binaries
 *.o

@@ -21,12 +21,10 @@ std::jthread ThreadPool::spawnWorkerThread()
     for (;;)
     {
       std::unique_lock<std::mutex> lock(this->mutex_);
-      if (!this->task_available_.wait(lock, this->stop_source_.get_token(),
-                                      [this] { return !this->task_queue_.empty(); }))
-      {
-        return;
-      }
-      auto task = this->task_queue_.front();
+      const bool has_task = this->task_available_.wait(lock, this->stop_source_.get_token(), [this]
+                                                       { return !this->task_queue_.empty(); });
+      if (!has_task) return;
+      auto task = std::move(this->task_queue_.front());
       this->task_queue_.pop();
       lock.unlock();
       task();
