@@ -9,3 +9,4 @@ packages:
   - libgrpc++-dev
   - libboost-all-dev
   - libcpprest-dev
+  - libpqxx-dev

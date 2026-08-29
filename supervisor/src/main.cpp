@@ -42,7 +42,8 @@ int main()
 {
   LoadEnvFile(".env");
 
-  Supervisor supervisor(GetEnv("SUPERVISOR_ADDRESS", "0.0.0.0:50051"), GetEnv("ETCD_ENDPOINT", "localhost:2379"));
+  Supervisor supervisor(GetEnv("SUPERVISOR_ADDRESS", "0.0.0.0:50051"), GetEnv("ETCD_ENDPOINT", "localhost:2379"),
+                        GetEnv("POSTGRES_DSN", "postgres://localhost:5432/jobscheduler"));
   g_supervisor = &supervisor;
 
   std::signal(SIGINT, HandleSignal);
