@@ -42,8 +42,8 @@ if [ "$run_supervisor" = true ]; then
 fi
 
 if [ "$run_api" = true ]; then
-  echo "==> api (Rust) tests"
-  (cd "$SCRIPT_DIR/api" && cargo test) || status=1
+  echo "==> api (Go) tests"
+  (cd "$SCRIPT_DIR/api" && go test ./...) || status=1
 fi
 
 if [ "$run_e2e" = true ]; then

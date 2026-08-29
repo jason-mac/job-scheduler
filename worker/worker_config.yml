@@ -1,0 +1,4 @@
+worker_config:
+  address: 0.0.0.0:50052
+  etcd_endpoint: localhost:2379
+  thread_pool_size: MAX

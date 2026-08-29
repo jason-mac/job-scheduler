@@ -3,13 +3,13 @@ package main
 import (
 	"log"
 	"net/http"
+
+	"github.com/jason-mac/job-scheduler/api/internal/handlers"
 )
 
 func main() {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("ok"))
-	})
+	mux.HandleFunc("/api/health", handlers.Health)
 
 	log.Fatal(http.ListenAndServe("0.0.0.0:3000", mux))
 }

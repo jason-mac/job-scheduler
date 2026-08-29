@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package scheduler;
+
+option go_package = "github.com/jason-mac/job-scheduler/api/internal/schedulerpb;schedulerpb";
+
+service Scheduler
+{
+  rpc SubmitJob(SubmitJobRequest) returns (SubmitJobResponse);
+}
+
+message SubmitJobRequest  
+{
+  string command = 1;
+}
+
+message SubmitJobResponse
+{
+  string response = 1;
+}
+
+service Worker
+{
+  rpc ExecuteJob(ExecuteJobRequest) returns (ExecuteJobResponse);
+}
+
+message ExecuteJobRequest
+{
+  string command = 1;
+}
+
+message ExecuteJobResponse
+{
+  string response = 1;
+}
