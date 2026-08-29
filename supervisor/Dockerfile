@@ -3,7 +3,6 @@ WORKDIR /app
 COPY supervisor/requirements.yml supervisor/install_deps.sh supervisor/
 RUN supervisor/install_deps.sh
 
-# etcd-cpp-apiv3 isn't an apt package — build it from source (verified working)
 COPY scripts/install_etcd_cpp.sh .
 RUN ./install_etcd_cpp.sh
 

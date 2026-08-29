@@ -19,6 +19,9 @@ api/api.exe
 *.dylib
 *.exe
 
+# env
+.env
+
 # editor / OS
 .vscode/
 .idea/

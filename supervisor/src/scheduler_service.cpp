@@ -10,3 +10,10 @@ grpc::Status SchedulerServiceImpl::SubmitJob(grpc::ServerContext* context,
 {
   return supervisor_.HandleSubmitJob(request, response);
 }
+
+grpc::Status SchedulerServiceImpl::ReportJobResult(grpc::ServerContext* context,
+                                                    const scheduler::ReportJobResultRequest* request,
+                                                    scheduler::ReportJobResultResponse* response)
+{
+  return supervisor_.HandleReportJobResult(request, response);
+}

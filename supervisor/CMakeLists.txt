@@ -1,5 +1,6 @@
 find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
+find_package(etcd-cpp-api CONFIG REQUIRED)
 
 set(PROTO_GEN_DIR ${CMAKE_SOURCE_DIR}/build/generated)
 
@@ -16,6 +17,7 @@ target_include_directories(supervisor_lib PUBLIC include ${PROTO_GEN_DIR})
 target_link_libraries(supervisor_lib PUBLIC
   gRPC::grpc++
   protobuf::libprotobuf
+  etcd-cpp-api
 )
 
 add_executable(supervisor

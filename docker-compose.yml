@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: jobscheduler
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./api/internal/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.17
+    command: etcd --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://etcd:2379
+    ports:
+      - "2379:2379"
+
+  supervisor:
+    build:
+      context: .
+      dockerfile: supervisor/Dockerfile
+    environment:
+      SUPERVISOR_ADDRESS: 0.0.0.0:50051
+      ETCD_ENDPOINT: etcd:2379
+    depends_on:
+      - etcd
+    ports:
+      - "50051:50051"
+
+  worker:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile
+    environment:
+      WORKER_ADDRESS: worker:50052
+      ETCD_ENDPOINT: etcd:2379
+      WORKER_ID: worker-1
+    depends_on:
+      - etcd
+      - supervisor
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    environment:
+      SUPERVISOR_ADDRESS: supervisor:50051
+      POSTGRES_DSN: postgres://postgres:5432/jobscheduler
+    depends_on:
+      - postgres
+      - supervisor
+    ports:
+      - "3000:3000"

@@ -1,16 +1,50 @@
 #include "supervisor.h"
 
-Supervisor::Supervisor(const std::string& address) : address_(address), service_(*this) {}
+Supervisor::Supervisor(const std::string& address, const std::string& etcd_endpoint)
+    : address_(address), worker_registry_(etcd_endpoint), service_(*this)
+{
+}
 
 grpc::Status Supervisor::HandleSubmitJob(const scheduler::SubmitJobRequest* request,
                                           scheduler::SubmitJobResponse* response)
 {
-  // TODO: implement — use worker_registry_ to pick a worker, dispatch, fill in response
+  std::string worker_address = worker_registry_.GetWorker();
+
+  if (worker_address.empty())
+  {
+    return grpc::Status(grpc::StatusCode::UNAVAILABLE, "no workers available");
+  }
+
+  auto channel = grpc::CreateChannel(worker_address, grpc::InsecureChannelCredentials());
+  auto stub = scheduler::Worker::NewStub(channel);
+
+  scheduler::ExecuteJobRequest execute_request;
+  execute_request.set_command(request->command());
+
+  scheduler::ExecuteJobResponse execute_response;
+  grpc::ClientContext context;
+
+  grpc::Status status = stub->ExecuteJob(&context, execute_request, &execute_response);
+  if (!status.ok())
+  {
+    return status;
+  }
+
+  response->set_response(execute_response.response());
+
+  return grpc::Status::OK;
+}
+
+grpc::Status Supervisor::HandleReportJobResult(const scheduler::ReportJobResultRequest* request,
+                                                scheduler::ReportJobResultResponse* response)
+{
   return grpc::Status::OK;
 }
 
 void Supervisor::Run()
 {
+  worker_registry_.Start();
+
   grpc::ServerBuilder builder;
   builder.AddListeningPort(address_, grpc::InsecureServerCredentials());
   builder.RegisterService(&service_);

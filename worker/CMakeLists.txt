@@ -10,6 +10,7 @@ add_library(worker_lib STATIC
   src/worker_service.cpp
   src/worker.cpp
   src/etcd_registrar.cpp
+  src/job_poller.cpp
   ${PROTO_GEN_DIR}/scheduler.pb.cc
   ${PROTO_GEN_DIR}/scheduler.grpc.pb.cc
 )

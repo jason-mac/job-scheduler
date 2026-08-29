@@ -1,7 +1,7 @@
 #include "worker.hpp"
 
 Worker::Worker(const std::string& address, const std::string& etcd_endpoint, const std::string& worker_id)
-    : address_(address), service_(thread_pool_), etcd_registrar_(etcd_endpoint, worker_id, address)
+    : address_(address), service_(thread_pool_, job_poller_), etcd_registrar_(etcd_endpoint, worker_id, address)
 {
 }
 

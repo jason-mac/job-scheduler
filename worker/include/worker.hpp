@@ -6,6 +6,7 @@
 #include <grpcpp/grpcpp.h>
 
 #include "etcd_registrar.h"
+#include "job_poller.h"
 #include "thread_pool.h"
 #include "worker_service.h"
 
@@ -19,6 +20,7 @@ public:
 private:
   std::string address_;
   ThreadPool thread_pool_;
+  JobPoller job_poller_;
   WorkerServiceImpl service_;
   EtcdRegistrar etcd_registrar_;
   std::unique_ptr<grpc::Server> server_;

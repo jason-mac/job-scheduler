@@ -3,7 +3,13 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-WorkerServiceImpl::WorkerServiceImpl(ThreadPool& thread_pool) : thread_pool_(thread_pool) {}
+#include <future>
+#include <memory>
+
+WorkerServiceImpl::WorkerServiceImpl(ThreadPool& thread_pool, JobPoller& job_poller)
+    : thread_pool_(thread_pool), job_poller_(job_poller)
+{
+}
 
 grpc::Status WorkerServiceImpl::ExecuteJob(grpc::ServerContext* context,
                                            const scheduler::ExecuteJobRequest* request,
@@ -11,7 +17,7 @@ grpc::Status WorkerServiceImpl::ExecuteJob(grpc::ServerContext* context,
 {
   std::string command = request->command();
 
-  thread_pool_.submit(
+  auto task = std::make_shared<std::packaged_task<int()>>(
       [command]()
       {
         pid_t pid = fork();
@@ -21,14 +27,22 @@ grpc::Status WorkerServiceImpl::ExecuteJob(grpc::ServerContext* context,
         if (is_child)
         {
           execlp("/bin/sh", "sh", "-c", command.c_str(), nullptr);
-          _exit(127); // only reached if execlp fails
+          _exit(127);
         }
-        else if (is_parent)
+
+        if (is_parent)
         {
           int status;
           waitpid(pid, &status, 0);
+          return status;
         }
+
+        return -1;
       });
+
+  std::future<int> future = task->get_future();
+  thread_pool_.submit([task]() { (*task)(); });
+  job_poller_.Submit(std::move(future));
 
   return grpc::Status::OK;
 }

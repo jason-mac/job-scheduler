@@ -11,11 +11,13 @@
 class Supervisor
 {
 public:
-  explicit Supervisor(const std::string& address);
+  Supervisor(const std::string& address, const std::string& etcd_endpoint);
   void Run();
   void Shutdown();
   grpc::Status HandleSubmitJob(const scheduler::SubmitJobRequest* request,
                                 scheduler::SubmitJobResponse* response);
+  grpc::Status HandleReportJobResult(const scheduler::ReportJobResultRequest* request,
+                                      scheduler::ReportJobResultResponse* response);
 
 private:
   std::string address_;

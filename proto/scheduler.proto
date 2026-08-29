@@ -7,16 +7,28 @@ option go_package = "github.com/jason-mac/job-scheduler/api/internal/schedulerpb
 service Scheduler
 {
   rpc SubmitJob(SubmitJobRequest) returns (SubmitJobResponse);
+  rpc ReportJobResult(ReportJobResultRequest) returns (ReportJobResultResponse);
 }
 
-message SubmitJobRequest  
+message SubmitJobRequest
 {
   string command = 1;
+  string job_id = 2;
 }
 
 message SubmitJobResponse
 {
   string response = 1;
+}
+
+message ReportJobResultRequest
+{
+  string job_id = 1;
+  int32 exit_code = 2;
+}
+
+message ReportJobResultResponse
+{
 }
 
 service Worker
@@ -27,6 +39,7 @@ service Worker
 message ExecuteJobRequest
 {
   string command = 1;
+  string job_id = 2;
 }
 
 message ExecuteJobResponse
