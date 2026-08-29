@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOG_DIR="$SCRIPT_DIR/build_logs"
 mkdir -p "$LOG_DIR"
 

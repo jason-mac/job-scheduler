@@ -6,7 +6,7 @@ set(PROTO_GEN_DIR ${CMAKE_SOURCE_DIR}/build/generated)
 add_library(supervisor_lib STATIC
   src/worker_registry.cpp
   src/scheduler_service.cpp
-  src/scheduler.cpp
+  src/supervisor.cpp
   ${PROTO_GEN_DIR}/scheduler.pb.cc
   ${PROTO_GEN_DIR}/scheduler.grpc.pb.cc
 )

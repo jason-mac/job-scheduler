@@ -1,15 +1,15 @@
-#include "scheduler.h"
+#include "supervisor.h"
 
-Scheduler::Scheduler(const std::string& address) : address_(address), service_(*this) {}
+Supervisor::Supervisor(const std::string& address) : address_(address), service_(*this) {}
 
-grpc::Status Scheduler::HandleSubmitJob(const scheduler::SubmitJobRequest* request,
-                                         scheduler::SubmitJobResponse* response)
+grpc::Status Supervisor::HandleSubmitJob(const scheduler::SubmitJobRequest* request,
+                                          scheduler::SubmitJobResponse* response)
 {
   // TODO: implement — use worker_registry_ to pick a worker, dispatch, fill in response
   return grpc::Status::OK;
 }
 
-void Scheduler::Run()
+void Supervisor::Run()
 {
   grpc::ServerBuilder builder;
   builder.AddListeningPort(address_, grpc::InsecureServerCredentials());
@@ -18,7 +18,7 @@ void Scheduler::Run()
   server_->Wait();
 }
 
-void Scheduler::Shutdown()
+void Supervisor::Shutdown()
 {
   if (server_) server_->Shutdown();
 }

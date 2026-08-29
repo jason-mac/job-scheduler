@@ -8,10 +8,10 @@
 #include "scheduler_service.h"
 #include "worker_registry.h"
 
-class Scheduler
+class Supervisor
 {
 public:
-  explicit Scheduler(const std::string& address);
+  explicit Supervisor(const std::string& address);
   void Run();
   void Shutdown();
   grpc::Status HandleSubmitJob(const scheduler::SubmitJobRequest* request,

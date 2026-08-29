@@ -1,29 +1,29 @@
 #include <csignal>
 
-#include "scheduler.h"
+#include "supervisor.h"
 
 namespace
 {
-Scheduler* g_scheduler = nullptr;
+Supervisor* g_supervisor = nullptr;
 
 void HandleSignal(int)
 {
-  if (g_scheduler)
+  if (g_supervisor)
   {
-    g_scheduler->Shutdown();
+    g_supervisor->Shutdown();
   }
 }
 } // namespace
 
 int main()
 {
-  Scheduler scheduler("0.0.0.0:50051");
-  g_scheduler = &scheduler;
+  Supervisor supervisor("0.0.0.0:50051");
+  g_supervisor = &supervisor;
 
   std::signal(SIGINT, HandleSignal);
   std::signal(SIGTERM, HandleSignal);
 
-  scheduler.Run();
+  supervisor.Run();
 
   return 0;
 }

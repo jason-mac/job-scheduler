@@ -1,8 +1,12 @@
 packages:
   - build-essential
   - cmake
+  - git
+  - pkg-config
   - protobuf-compiler
   - protobuf-compiler-grpc
   - libprotobuf-dev
   - libgrpc++-dev
   - libyaml-cpp-dev
+  - libboost-all-dev
+  - libcpprest-dev

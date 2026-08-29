@@ -2,16 +2,16 @@
 
 #include "scheduler.grpc.pb.h"
 
-class Scheduler;
+class Supervisor;
 
 class SchedulerServiceImpl final : public scheduler::Scheduler::Service
 {
 public:
-  explicit SchedulerServiceImpl(::Scheduler& scheduler);
+  explicit SchedulerServiceImpl(::Supervisor& supervisor);
 
   grpc::Status SubmitJob(grpc::ServerContext* context, const scheduler::SubmitJobRequest* request,
                          scheduler::SubmitJobResponse* response) override;
 
 private:
-  ::Scheduler& scheduler_;
+  ::Supervisor& supervisor_;
 };

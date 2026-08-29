@@ -1,14 +1,29 @@
-#include "thread_pool.h"
+#include <csignal>
 
-#include <chrono>
-#include <thread>
+#include "worker.hpp"
+
+namespace
+{
+Worker* g_worker = nullptr;
+
+void HandleSignal(int)
+{
+  if (g_worker)
+  {
+    g_worker->Shutdown();
+  }
+}
+}  // namespace
 
 int main()
 {
-  ThreadPool pool;
+  Worker worker("0.0.0.0:50052", "localhost:2379", "worker-1");
+  g_worker = &worker;
 
-  for (;;)
-  {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-  }
+  std::signal(SIGINT, HandleSignal);
+  std::signal(SIGTERM, HandleSignal);
+
+  worker.Run();
+
+  return 0;
 }
