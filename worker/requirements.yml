@@ -1,0 +1,8 @@
+packages:
+  - build-essential
+  - cmake
+  - protobuf-compiler
+  - protobuf-compiler-grpc
+  - libprotobuf-dev
+  - libgrpc++-dev
+  - libyaml-cpp-dev
